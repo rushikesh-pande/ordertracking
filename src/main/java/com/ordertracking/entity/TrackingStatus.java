@@ -1,0 +1,16 @@
+package com.ordertracking.entity;
+
+public enum TrackingStatus {
+    ORDER_CREATED,
+    ORDER_CONFIRMED,
+    PAYMENT_PROCESSING,
+    PAYMENT_CONFIRMED,
+    PREPARING,
+    DISPATCHED,
+    IN_TRANSIT,
+    OUT_FOR_DELIVERY,
+    DELIVERED,
+    CANCELLED,
+    RETURN_INITIATED,
+    RETURNED
+}

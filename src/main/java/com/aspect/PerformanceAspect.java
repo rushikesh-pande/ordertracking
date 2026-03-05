@@ -7,23 +7,27 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 /**
- * Auto-added by Hub-Spoke Orchestrator v2.0
+ * Auto-added by Hub-Spoke Orchestrator v3.0
  * Repo: ordertracking — discovered via GitHub API scan (no URL provided)
  */
 @Aspect @Component @Slf4j
 public class PerformanceAspect {
-    @Around("execution(* com.controller..*(..))")
-    public Object timeController(ProceedingJoinPoint pjp) throws Throwable {
-        long start = System.currentTimeMillis();
-        String method = pjp.getSignature().getDeclaringType().getSimpleName()
-                        + "." + pjp.getSignature().getName();
-        log.info("[HUB-SPOKE] ENTER  {}", method);
+
+    @Around("execution(* com.controller..*(..))"
+           + " || execution(* com.service..*(..))")
+    public Object timeMethod(ProceedingJoinPoint pjp) throws Throwable {
+        long   t0  = System.currentTimeMillis();
+        String mtd = pjp.getSignature().getDeclaringType().getSimpleName()
+                     + "." + pjp.getSignature().getName();
+        log.info("[HUB-SPOKE-v3] >>> {}", mtd);
         try {
-            Object result = pjp.proceed();
-            log.info("[HUB-SPOKE] EXIT   {}  duration={}ms", method, System.currentTimeMillis()-start);
-            return result;
+            Object res = pjp.proceed();
+            log.info("[HUB-SPOKE-v3] <<< {} done={}ms", mtd,
+                     System.currentTimeMillis() - t0);
+            return res;
         } catch (Exception ex) {
-            log.error("[HUB-SPOKE] ERROR  {}  duration={}ms  ex={}", method, System.currentTimeMillis()-start, ex.getMessage());
+            log.error("[HUB-SPOKE-v3] ERR {} {}ms ex={}",
+                      mtd, System.currentTimeMillis() - t0, ex.getMessage());
             throw ex;
         }
     }
